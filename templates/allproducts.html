@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Category {% endblock %}
+
+{% block content %}
+<div class = 'container'>
+    <h2>All products</h2><hr>
+    {% for cat in allcategories %}
+    <h3>{{cat.title}}</h3> <hr>  
+        <div class = 'row'>    
+             
+            {% for p in cat.product_set.all %}
+            <div class = 'col-md-4'>
+                <h2>{{p.title}}</h2>
+                <img src="{{p.image.url}}" alt="" width="200" > 
+                <div class = 'btn-group'>
+                    <a href="{% url 'ecomapp:productdetail' p.slug %}" class = 'btn btn-info'>View</a>
+                    <a href="" class = 'btn btn-primary'>Add to cart</a>
+                </div>
+            </div>
+            {% endfor %}
+  
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
