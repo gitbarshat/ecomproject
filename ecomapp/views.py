@@ -175,13 +175,20 @@ class CustomerloginView(FormView):
     form_class = CustomerloginForm
     success_url = reverse_lazy('ecomapp:home')
 
-    def form_valid(self,form):
-        uname = form.cleaned_data.get('username')
+    def form_valid(self, form):
+        uname = form.cleaned_data['username']
         pword = form.cleaned_data['password']
-        usr = authenticate(username = uname, password= pword)
-        if usr is not None and usr is customer:
-            login(self.request, usr)
-        else:
+        try:
+            user = User.objects.get(username=uname)
+            usr = authenticate(username = uname, password= pword)
+            try:
+                if user is not None and user.customer:
+                    login(self.request, usr)
+                else:
+                    return render(self.request, self.template_name, {'form':self.form_class, 'error': 'Invalid information'})
+            except:
+                return render(self.request, self.template_name, {'form':self.form_class, 'error': 'Invalid information'})
+        except:
             return render(self.request, self.template_name, {'form':self.form_class, 'error': 'Invalid information'})
 
         return super().form_valid(form)
